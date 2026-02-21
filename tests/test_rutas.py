@@ -1,22 +1,23 @@
-import pytest
-
 from src.rutas import agregar_ruta, rutas
-from src.exceptions import RouteError
 
 
-def setup_function():
-    rutas.clear()
-
-
-def test_agregar_ruta_correcta():
-
-    ruta = agregar_ruta("Ruta Medellin", 120, "Media")
-
+def test_agregar_ruta_normal():
+    ruta = agregar_ruta("Ruta Medellin", "Alta")
     assert ruta["nombre"] == "Ruta Medellin"
-    assert ruta["km"] == 120
+    assert ruta["dificultad"] == "Alta"
 
 
-def test_km_invalido():
+def test_agregar_ruta_nombre_nulo():
+    ruta = agregar_ruta(None, "Baja")
+    assert ruta["nombre"] == "Ruta Default"
 
-    with pytest.raises(RouteError):
-        agregar_ruta("Ruta Mala", -10, "Alta")
+
+def test_agregar_ruta_dificultad_nula():
+    ruta = agregar_ruta("Ruta Cali", None)
+    assert ruta["dificultad"] == "Media"
+
+
+def test_ruta_se_agrega_a_lista():
+    cantidad_inicial = len(rutas)
+    agregar_ruta("Nueva Ruta", "Media")
+    assert len(rutas) == cantidad_inicial + 1

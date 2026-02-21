@@ -1,6 +1,2 @@
-def ordenar_por_puntos(usuarios):
-    return sorted(
-        usuarios,
-        key=lambda x: x["puntos"],
-        reverse=True
-    )
+def ordenar_por_puntos(lista_usuarios):
+    return sorted(lista_usuarios, key=lambda x: x["puntos"], reverse=True)

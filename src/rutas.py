@@ -1,19 +1,13 @@
-from src.exceptions import RouteError
-
 rutas = []
 
-
-def agregar_ruta(nombre: str, km: float, nivel: str):
-
-    if km <= 0:
-        raise RouteError("Kilometraje inválido")
+def agregar_ruta(nombre=None, dificultad=None):
+    nombre = nombre or "Ruta Default"
+    dificultad = dificultad or "Media"
 
     ruta = {
         "nombre": nombre,
-        "km": km,
-        "nivel": nivel
+        "dificultad": dificultad
     }
 
     rutas.append(ruta)
-
     return ruta

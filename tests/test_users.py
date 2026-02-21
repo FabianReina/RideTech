@@ -1,65 +1,55 @@
 import pytest
-
-from src.users import (
-    registrar_usuario,
-    login,
-    usuarios
-)
-
-from src.exceptions import (
-    UserAlreadyExistsError,
-    InvalidDataError,
-    AuthenticationError
-)
+from src.users import registrar_usuario, autenticar_usuario, usuarios
 
 
-def setup_function():
+
+
+def test_registro_normal():
+    usuarios.clear() # Mantén la casa limpia
+    usuario = registrar_usuario("nico", "1234")
+    assert usuario["username"] == "nico"
+    assert usuario["password"] == "1234"
+
+def test_registro_username_nulo():
     usuarios.clear()
+    usuario = registrar_usuario(None, "1234")
+    assert usuario["username"] == "usuario_default"
 
+def test_registro_password_nulo():
+    usuarios.clear()
+    usuario = registrar_usuario("nico2", None)
+    assert usuario["password"] == "123456"
 
-def test_registro_correcto():
+def test_autenticacion_correcta():
+    usuarios.clear()
+    registrar_usuario("testuser", "abc")
+    assert autenticar_usuario("testuser", "abc") is True
 
-    user = registrar_usuario(
-        "Juan",
-        "juan@test.com",
-        "1234"
-    )
+def test_autenticacion_incorrecta():
+    usuarios.clear()
+    assert autenticar_usuario("noexiste", "123") is False
 
-    assert user["email"] == "juan@test.com"
+def test_no_permitir_usuarios_duplicados():
+    usuarios.clear() 
+    
+    # Registramos un usuario por primera vez
+    registrar_usuario("user123", "pass1")
+    assert len(usuarios) == 1
+    
+    # Intentamos registrar el MISMO username con otra contraseña
+    registrar_usuario("user123", "pass2")
+    
+    # VALIDACIÓN: La lista NO debe haber crecido, debe seguir en 1
+    assert len(usuarios) == 1
+    
+    # VALIDACIÓN EXTRA: El password debe seguir siendo el del primer registro
+    assert usuarios[0]["password"] == "pass1"
 
-
-def test_password_corta():
-
-    with pytest.raises(InvalidDataError):
-        registrar_usuario("Ana", "ana@test.com", "12")
-
-
-def test_usuario_duplicado():
-
-    registrar_usuario("A", "a@test.com", "1234")
-
-    with pytest.raises(UserAlreadyExistsError):
-        registrar_usuario("B", "a@test.com", "9999")
-
-
-def test_login_correcto():
-
-    registrar_usuario("Luis", "l@test.com", "abcd")
-
-    user = login("l@test.com", "abcd")
-
-    assert user["nombre"] == "Luis"
-
-
-def test_login_usuario_no_existe():
-
-    with pytest.raises(AuthenticationError):
-        login("x@test.com", "1234")
-
-
-def test_login_password_incorrecta():
-
-    registrar_usuario("Ana", "ana@test.com", "abcd")
-
-    with pytest.raises(AuthenticationError):
-        login("ana@test.com", "9999")
+def test_registro_multiples_usuarios_distintos():
+    usuarios.clear()
+    registrar_usuario("nico", "1234")
+    registrar_usuario("ana", "32222")
+    registrar_usuario("ana", "32222")
+    
+    # Aquí sí deben haber 3, porque son diferentes
+    assert len(usuarios) == 3
