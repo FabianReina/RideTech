@@ -48,8 +48,8 @@ def test_no_permitir_usuarios_duplicados():
 def test_registro_multiples_usuarios_distintos():
     usuarios.clear()
     registrar_usuario("nico", "1234")
-    registrar_usuario("ana", "32222")
-    registrar_usuario("ana", "32222")
+    registrar_usuario("camilo", "32222")
+    registrar_usuario("camilo", "32222")
     
     # Aquí sí deben haber 3, porque son diferentes
     assert len(usuarios) == 3
