@@ -1,3 +1,6 @@
+from fastapi import FastAPI
+from src.exceptions import UserAlreadyExistsError , InvalidDataError , AuthenticationError , RouteError
+
 from users import registrar_usuario
 from rutas import agregar_ruta
 
