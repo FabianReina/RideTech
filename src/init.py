@@ -1,13 +1,26 @@
 from fastapi import FastAPI
-from src.exceptions import UserAlreadyExistsError , InvalidDataError , AuthenticationError , RouteError
-
+from src.exceptions import UserAlreadyExistsError, InvalidDataError, AuthenticationError, RouteError
 from users import registrar_usuario
 from rutas import agregar_ruta
 
+app = FastAPI()
 
-usuario1 = registrar_usuario("Fabian", "fabian@gmail.com")
+@app.get("/")
+def home():
+    return {"mensaje": "Mi API está funcionando"}
 
-ruta1 = agregar_ruta("Medellín - Guatapé", 120, "Media")
+@app.post("/usuarios")
+def crear_usuario(nombre: str, email: str):
+    try:
+        usuario = registrar_usuario(nombre, email)
+        return {"usuario": usuario}
+    except UserAlreadyExistsError as e:
+        return {"error": str(e)}
 
-print(usuario1)
-print(ruta1)
+@app.post("/rutas")
+def crear_ruta(nombre: str, distancia: int, dificultad: str):
+    try:
+        ruta = agregar_ruta(nombre, distancia, dificultad)
+        return {"ruta": ruta}
+    except RouteError as e:
+        return {"error": str(e)}
