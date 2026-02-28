@@ -6,13 +6,13 @@ echo "=========================================="
 
 echo " Iniciando FastAPI en el puerto $PORT" 
 
-echo " Archivo principal: main.py" 
+echo " Archivo principal: init.py" 
 
 echo " Instancia de FastAPI: app" 
 
 echo "==========================================" 
 
 
-gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:$PORT 
+gunicorn -w 4 -k uvicorn.workers.UvicornWorker init:app --bind 0.0.0.0:$PORT 
 
 EOF 
