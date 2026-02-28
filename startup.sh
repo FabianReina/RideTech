@@ -1,18 +1,12 @@
-PORT=${PORT:-8000} 
+#!/bin/bash
 
- 
+PORT=${PORT:-8000}
 
-echo "==========================================" 
+echo "=========================================="
+echo " Iniciando FastAPI en el puerto $PORT"
+echo " Archivo principal: main.py"
+echo " Instancia de FastAPI: app"
+echo "=========================================="
 
-echo " Iniciando FastAPI en el puerto $PORT" 
-
-echo " Archivo principal: main.py" 
-
-echo " Instancia de FastAPI: app" 
-
-echo "==========================================" 
-
-
-gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:$PORT 
-
-EOF 
+# Arranca la app con Gunicorn y Uvicorn workers
+gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:$PORT
